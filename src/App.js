@@ -7,11 +7,13 @@ import jsTPS from './common/jsTPS.js';
 
 // OUR TRANSACTIONS
 import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
+import DeleteSong_Transaction from './transactions/DeleteSong_Transaction.js';
+import AddSong_Transaction from './transactions/AddSong_Transaction.js';
+
 
 // THESE REACT COMPONENTS ARE MODALS
 import DeleteListModal from './components/DeleteListModal.js';
 import EditSongModal from './components/EditSongModal.js';
-import AddSongModal from './components/AddSongModal.js';
 
 // THESE REACT COMPONENTS ARE IN OUR UI
 import Banner from './components/Banner.js';
@@ -20,6 +22,7 @@ import PlaylistCards from './components/PlaylistCards.js';
 import SidebarHeading from './components/SidebarHeading.js';
 import SidebarList from './components/SidebarList.js';
 import Statusbar from './components/Statusbar.js';
+
 
 class App extends React.Component {
     constructor(props) {
@@ -131,10 +134,10 @@ class App extends React.Component {
         this.hideDeleteListModal();
     }
 
-    addSong = () => {
+    addSong = (id) => {
         let newSong = {title: "Untitled" , artist: "Unknown", youTubeId: "dQw4w9WgXcQ"};
         let list = this.state.currentList;
-        list.songs.push(newSong);
+        list.songs.splice(id, 0, newSong);
         this.setStateWithUpdatedList(list);
     }
 
@@ -142,6 +145,12 @@ class App extends React.Component {
         let list = this.state.currentList;
         list.songs.splice(id,1);
         this.setStateWithUpdatedList(list);
+    }
+
+    deleteSongUndo = (id, song) => {
+        let list = this.state.currentList;
+        list.songs.splice(id,0,song);
+        this.setStateWithUpdatedList(list);   
     }
 
     //Saving the changes for editing
@@ -273,6 +282,16 @@ class App extends React.Component {
         this.tps.addTransaction(transaction);
     }
 
+    addDeleteSongTransaction = (id, song) => {
+        let transaction = new DeleteSong_Transaction(this, id, song);
+        this.tps.addTransaction(transaction);
+    }
+
+    addInsertSongTransaction = () => {
+        let list = this.state.currentList;   
+        let transaction = new AddSong_Transaction(this, list.songs.length)
+        this.tps.addTransaction(transaction);
+    }
 
 
     // THIS FUNCTION BEGINS THE PROCESS OF PERFORMING AN UNDO
@@ -382,13 +401,13 @@ class App extends React.Component {
                     undoCallback={this.undo}
                     redoCallback={this.redo}
                     closeCallback={this.closeCurrentList}
-                    addSongCallback = {this.addSong}
+                    addSongCallback = {this.addInsertSongTransaction}
                 />
                 <PlaylistCards
                     currentList={this.state.currentList}
                     moveSongCallback={this.addMoveSongTransaction} 
                     editSongCallback={this.showEditSong}
-                    deleteSongConfirm={this.deleteSongConfirm}
+                    deleteSongConfirm={this.addDeleteSongTransaction}
                     />
                     
                 <Statusbar 
@@ -403,13 +422,6 @@ class App extends React.Component {
                     hideEditSongModalCallback={this.hideEditSongModal}
                     editSongCallback={this.saveSongChanges}
                 />
-
-                <AddSongModal
-                    hideAddSongModalCallback={this.hideAddSongModal}
-                    addSongCallback={this.insertNewSong}
-                />
-
-
                 </React.Fragment>
             
         );

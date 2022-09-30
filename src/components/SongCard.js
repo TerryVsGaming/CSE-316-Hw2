@@ -81,7 +81,7 @@ export default class SongCard extends React.Component {
     deleteSongCallback = (event) => {
         event.preventDefault();
         let id = event.target.id.replace("delete-song-confirm-button-","");
-        this.props.deleteSongConfirm(id-1);
+        this.props.deleteSongConfirm(id-1, this.props.song);
         let modal = document.getElementById("delete-song-modal-" + id)
         modal.classList.remove("is-visible");
     }
