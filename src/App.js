@@ -9,7 +9,7 @@ import jsTPS from './common/jsTPS.js';
 import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
 import DeleteSong_Transaction from './transactions/DeleteSong_Transaction.js';
 import AddSong_Transaction from './transactions/AddSong_Transaction.js';
-
+import EditSong_Transaction from './transactions/EditSong_Transaction.js';
 
 // THESE REACT COMPONENTS ARE MODALS
 import DeleteListModal from './components/DeleteListModal.js';
@@ -150,7 +150,7 @@ class App extends React.Component {
     deleteSongUndo = (id, song) => {
         let list = this.state.currentList;
         list.songs.splice(id,0,song);
-        this.setStateWithUpdatedList(list);   
+        this.setStateWithUpdatedList(list);  
     }
 
     //Saving the changes for editing
@@ -162,12 +162,23 @@ class App extends React.Component {
         let pos = document.getElementById("edit-song-position");
 
         let newSong = {title: title.value , artist: artist.value, youTubeId: id.value};
+
+        let position = pos.value;
+
         let list = this.state.currentList;
-        list.songs[pos.value] = newSong;
-        this.setStateWithUpdatedList(list);
+
+        let oldSong = list.songs[position];
+        let transaction = new EditSong_Transaction(this, position, oldSong, newSong);
+        this.tps.addTransaction(transaction);
+        
         this.hideEditSongModal();
     }
 
+    updateSong = (id, song) => {
+        let list = this.state.currentList;
+        list.songs[id] = song;
+        this.setStateWithUpdatedList(list);     
+    }
 
     showEditSong = (id) => {
         this.showEditSongModal(this.state.currentList.songs[(parseInt(id))-1], (parseInt(id)-1) );

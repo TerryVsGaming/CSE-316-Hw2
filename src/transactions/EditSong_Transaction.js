@@ -8,18 +8,20 @@ import jsTPS_Transaction from "../common/jsTPS.js"
  * @author McKilla Gorilla
  * @author ?
  */
-export default class AddSong_Transaction extends jsTPS_Transaction {
-    constructor(initApp, initNewSongIndex) {
+export default class EditSong_Transaction extends jsTPS_Transaction {
+    constructor(initApp, initIndex, initOldSong, initNewSong ) {
         super();
         this.app = initApp;
-        this.newSongIndex = initNewSongIndex;
+        this.index = initIndex;
+        this.oldSong = initOldSong;
+        this.newSong = initNewSong;
     }
 
     doTransaction() {
-        this.app.addSong(this.newSongIndex);
+        this.app.updateSong(this.index, this.newSong);
     }
     
     undoTransaction() {
-        this.app.deleteSongConfirm(this.newSongIndex);
+        this.app.updateSong(this.index, this.oldSong);
     }
 }
