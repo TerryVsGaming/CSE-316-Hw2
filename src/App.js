@@ -138,6 +138,12 @@ class App extends React.Component {
         this.setStateWithUpdatedList(list);
     }
 
+    deleteSongConfirm = (id) => {
+        let list = this.state.currentList;
+        list.songs.splice(id,1);
+        this.setStateWithUpdatedList(list);
+    }
+
     //Saving the changes for editing
     saveSongChanges = () =>{
         let title = document.getElementById("edit-song-title");
@@ -152,6 +158,7 @@ class App extends React.Component {
         this.setStateWithUpdatedList(list);
         this.hideEditSongModal();
     }
+
 
     showEditSong = (id) => {
         this.showEditSongModal(this.state.currentList.songs[(parseInt(id))-1], (parseInt(id)-1) );
@@ -380,7 +387,9 @@ class App extends React.Component {
                 <PlaylistCards
                     currentList={this.state.currentList}
                     moveSongCallback={this.addMoveSongTransaction} 
-                    editSongCallback={this.showEditSong}/>
+                    editSongCallback={this.showEditSong}
+                    deleteSongConfirm={this.deleteSongConfirm}
+                    />
                     
                 <Statusbar 
                     currentList={this.state.currentList} />

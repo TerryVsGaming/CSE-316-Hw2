@@ -71,8 +71,25 @@ export default class SongCard extends React.Component {
         modal.classList.add("is-visible");
     }
 
+    hideDeleteSongModal = (event) => {
+        event.preventDefault();
+        let id = event.target.id.replace("delete-song-cancel-button-","delete-song-modal-");
+        let modal = document.getElementById(id);
+        modal.classList.remove("is-visible");
+    }
+
+    deleteSongCallback = (event) => {
+        event.preventDefault();
+        let id = event.target.id.replace("delete-song-confirm-button-","");
+        this.props.deleteSongConfirm(id-1);
+        let modal = document.getElementById("delete-song-modal-" + id)
+        modal.classList.remove("is-visible");
+    }
+
+    
+
     render() {
-        const { song, selected } = this.props;
+        const { song, selected} = this.props;
         let num = this.getItemNum();
         console.log("num: " + num);
         let itemClass = "playlister-song";
@@ -122,14 +139,14 @@ export default class SongCard extends React.Component {
                         </div>
                         <div class="modal-south">
                             <input type="button" 
-                                id="delete-song-confirm-button" 
+                                id={"delete-song-confirm-button-" + num} 
                                 class="modal-button" 
-                                //onClick={deleteSongCallback}
+                                onClick={this.deleteSongCallback}
                                 value='Confirm' />
                             <input type="button" 
-                                id="delete-song-cancel-button" 
+                                id={"delete-song-cancel-button-" + num} 
                                 class="modal-button" 
-                               // onClick={hideDeleteSongModalCallback}
+                                onClick={this.hideDeleteSongModal}
                                 value='Cancel' />
                         </div>
                     </div>
