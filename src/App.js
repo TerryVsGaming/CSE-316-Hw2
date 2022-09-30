@@ -27,7 +27,7 @@ import Statusbar from './components/Statusbar.js';
 class App extends React.Component {
     constructor(props) {
         super(props);
-
+        this.keyBoardFunction = this.keyBoardFunction.bind(this);
         // THIS IS OUR TRANSACTION PROCESSING SYSTEM
         this.tps = new jsTPS();
 
@@ -386,11 +386,26 @@ class App extends React.Component {
         modal.classList.remove("is-visible");
     }
 
+    keyBoardFunction(event){
+        if (event.key === "Escape") {
+          console.log("YOLO");
+        }
+      }
+
+    componentDidMount(){
+        document.addEventListener("keydown", this.keyBoardFunction, false);
+      }
+    componentWillUnmount(){
+        document.removeEventListener("keydown", this.keyBoardFunction, false);
+      }
+
+
     render() {
         let canAddSong = this.state.currentList !== null;
         let canUndo = this.tps.hasTransactionToUndo();
         let canRedo = this.tps.hasTransactionToRedo();
         let canClose = this.state.currentList !== null;
+        document.addEventListener("keydown", this.keyBoardFunction, false);
         return (
                 <React.Fragment>
                 <Banner />
