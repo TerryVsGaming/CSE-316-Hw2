@@ -54,8 +54,21 @@ export default class SongCard extends React.Component {
         this.props.moveCallback(sourceId, targetId);
     }
 
+    handleClick = (event) =>{
+        event.preventDefault();
+        let id = event.target.id.replace("song-","");
+        this.props.editCallback(id);
+    }   
+
     getItemNum = () => {
         return this.props.id.substring("playlist-song-".length);
+    }
+
+    showDeleteSongModal = (event) => {
+        event.preventDefault();
+        let id = event.target.id.replace("delete-song-","delete-song-modal-");
+        let modal = document.getElementById(id);
+        modal.classList.add("is-visible");
     }
 
     render() {
@@ -73,7 +86,10 @@ export default class SongCard extends React.Component {
         }
 
         return (
+            <div>
+
             <div 
+
                 id={'song-' + num}
                 className={itemClass + " " + selectClass}
                 onDragStart={this.handleDragStart}
@@ -81,16 +97,45 @@ export default class SongCard extends React.Component {
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragLeave}
                 onDrop={this.handleDrop}
+                onDoubleClick = {this.handleClick}
                 draggable="true"
             >
                 {num + "."}
                 <a href={"https://www.youtube.com/watch?v=" + song.youTubeId} >
                 {song.title} by {song.artist}
                 </a>
-                <input type="button" id={'delete-song-' + num} class="list-card-button" value="X"></input>
+                <input type="button" id={'delete-song-' + num} class="list-card-button" value="X" onClick = {this.showDeleteSongModal} ></input>
             </div>
 
-            
+            <div 
+                class="modal" 
+                id= {"delete-song-modal-" + num} 
+                data-animation="slideInOutLeft">
+                    <div class="modal-root" id='verify-delete-song-root'>
+                        <div class="modal-north">
+                            Delete Song?
+                        </div>
+                        <div class="modal-center">
+                            <div class="modal-center-content">
+                            Are you sure you wish to permanently delete the song? 
+                            </div>
+                        </div>
+                        <div class="modal-south">
+                            <input type="button" 
+                                id="delete-song-confirm-button" 
+                                class="modal-button" 
+                                //onClick={deleteSongCallback}
+                                value='Confirm' />
+                            <input type="button" 
+                                id="delete-song-cancel-button" 
+                                class="modal-button" 
+                               // onClick={hideDeleteSongModalCallback}
+                                value='Cancel' />
+                        </div>
+                    </div>
+            </div>
+
+            </div>
         )
     }
 }
