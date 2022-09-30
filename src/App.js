@@ -138,6 +138,7 @@ class App extends React.Component {
         this.setStateWithUpdatedList(list);
     }
 
+    //Saving the changes for editing
     saveSongChanges = () =>{
         let title = document.getElementById("edit-song-title");
         let artist = document.getElementById("edit-song-artist");
@@ -380,6 +381,7 @@ class App extends React.Component {
                     currentList={this.state.currentList}
                     moveSongCallback={this.addMoveSongTransaction} 
                     editSongCallback={this.showEditSong}/>
+                    
                 <Statusbar 
                     currentList={this.state.currentList} />
                 <DeleteListModal
