@@ -386,10 +386,15 @@ class App extends React.Component {
         modal.classList.remove("is-visible");
     }
 
-    keyBoardFunction(event){
-        if (event.key === "Escape") {
-          console.log("YOLO");
+
+    keyBoardFunction = (event) => {
+        if (event.keyCode === 89) {
+          this.redo();
         }
+        if (event.keyCode === 90){
+            this.undo();
+        }
+
       }
 
     componentDidMount(){
@@ -407,6 +412,7 @@ class App extends React.Component {
         let canClose = this.state.currentList !== null;
         document.addEventListener("keydown", this.keyBoardFunction, false);
         return (
+            
                 <React.Fragment>
                 <Banner />
                 <SidebarHeading
